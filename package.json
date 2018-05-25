@@ -1,0 +1,13 @@
+{
+  "name": "Outhing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:O-clock-Galaxy/Outhing.git",
+  "author": "Audrey Cesar <audrey.cesar83@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "global": "^4.3.2",
+    "react-native": "^0.55.4",
+    "react-native-cli": "^2.0.1"
+  }
+}
