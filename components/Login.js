@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
+import { Font } from 'expo';
 
 export default class Login extends Component {
   render() {
@@ -8,7 +9,7 @@ export default class Login extends Component {
         <StatusBar
           barStyle="light-content"
         />
-        <Text style={styles.title}>Bienvenue sur Outhing!</Text>
+        <Text style={styles.title}>Bienvenue sur Outhing</Text>
         <TextInput
           placeholder="Username or email"
           returnKeyType="next"
@@ -36,9 +37,9 @@ const styles = StyleSheet.create({
   container: {
   },
   title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontSize: 28,
+    color: 'white',
+    fontWeight: "bold",
     marginBottom: 50
   },
   input: {
