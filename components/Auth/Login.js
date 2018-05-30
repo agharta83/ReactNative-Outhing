@@ -16,8 +16,9 @@ export default class LoginScreen extends Component {
       apiKey: 'AIzaSyCH7afXHdq6dbc4CYu_5EhT1SxEXtpdRYU',
       authDomain: 'testouthing.firebaseapp.com',
     }
-
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
   }
 
   onPressSignIn() {
