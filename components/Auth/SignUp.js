@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
 // import { Font } from 'expo';
+import * as firebase from 'firebase';
 
 export default class SignUp extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = ({
+      email: '',
+      password: '',
+    });
+}
+    signUp = (email, password) => {
+      firebase.auth().createUserWithEmailAndPassword(email, password);
+    };
+
   render() {
-    return(
+    return (
       <View style={styles.container}>
         <KeyboardAvoidingView behavior="padding">
           <StatusBar
@@ -17,6 +30,7 @@ export default class SignUp extends Component {
             onSubmitEditing={() => this.nextEmail.focus()}
             keyboardType="email-address"
             autoCapitalize="none"
+            onChangeText={(email)=> this.setState({email})}
             style={styles.input}
           />
           <TextInput
@@ -34,6 +48,7 @@ export default class SignUp extends Component {
             onSubmitEditing={() => this.passwordInput.focus()}
             ref={(input) => this.nextPassword = input}
             secureTextEntry
+            onChangeText={(password) => this.setState({password})}
             style={styles.input}
           />
           <TextInput
@@ -46,7 +61,7 @@ export default class SignUp extends Component {
           <TouchableOpacity style={styles.buttonContainer}>
             <Text
               style={styles.buttonText}
-              onPress={() => this.props.navigation.goBack()}
+              onPress={() => this.signUp(this.state.email, this.state.password)}
             >SIGN UP</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
