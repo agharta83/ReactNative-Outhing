@@ -26,8 +26,15 @@ const customTextProps = {
   },
 };
 
-setCustomText(customTextProps);
+const customTextProps = {
+  style: {
+    fontSize: 16,
+    color: 'white'
+  }
+};
+
 setCustomTextInput(customTextInputProps);
+setCustomText(customTextProps);
 
 const AppStack = createStackNavigator({
   Home: {
