@@ -21,13 +21,6 @@ const customTextInputProps = {
 
 const customTextProps = {
   style: {
-    color: 'white',
-    fontSize: 16,
-  },
-};
-
-const customTextProps = {
-  style: {
     fontSize: 16,
     color: 'white'
   }
