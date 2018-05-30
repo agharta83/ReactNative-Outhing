@@ -1,23 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Platform } from 'react-native';
-import { Font, AppLoading } from "expo";
-import {
-  setCustomView,
-  setCustomTextInput,
-  setCustomText,
-  setCustomImage,
-  setCustomTouchableOpacity
-} from 'react-native-global-props';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
+import { Font } from 'expo';
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
-import Login from './components/Login';
-
-const customTextProps = {
-  style: {
-    fontFamily: 'Roboto_Regular',
-    color: 'white',
-    fontSize: 20
-  }
-};
+import SignUpScreen from './components/Auth/SignUp';
+import LoginScreen from './components/Auth/Login';
+import HomeScreen from './components/Home';
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -26,45 +15,50 @@ const customTextInputProps = {
     borderColor: 'gray',
     paddingVertical: 5,
     paddingHorizontal: 10,
-    backgroundColor: 'white'
-  }
+    backgroundColor: 'white',
+  },
+};
+
+const customTextProps = {
+  style: {
+    color: 'white',
+    fontSize: 16,
+  },
 };
 
 setCustomText(customTextProps);
 setCustomTextInput(customTextInputProps);
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { loading: true };
-  }
-  async componentDidMount() {
-    await Font.loadAsync({
-      Roboto_Regular: require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
-      Roboto_Italic: require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
-      Roboto_Bold: require('./assets/fonts/Roboto/Roboto-Bold.ttf'),
-    });
-    this.setState({ loading: false });
-  }
-  render() {
-   if (this.state.loading) {
-     return (
-         <AppLoading />
-     );
-   }
-   return (
-     <View style={styles.container}>
-       <Login />
-     </View>
-   );
- }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#5f27cd',
-    alignItems: 'center',
-    justifyContent: 'center',
+const AppStack = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      header: null,
+    },
   },
 });
+
+const AuthStack = createStackNavigator(
+  {
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SignUp: SignUpScreen,
+  },
+  {
+    initialRouteName: 'Login',
+  },
+);
+
+export default createSwitchNavigator(
+  {
+    App: AppStack,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'Auth',
+  },
+);
