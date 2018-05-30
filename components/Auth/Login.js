@@ -13,7 +13,9 @@ const firebaseConfig = {
   storageBucket: 'outhing-13fcf.appspot.com',
   messagingSenderId: '782761547865',
 };
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default class Login extends Component {
   constructor(props) {
