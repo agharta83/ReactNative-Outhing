@@ -7,6 +7,7 @@ import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 import HomeScreen from './components/Home';
+import SettingsScreen from './components/Settings';
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -29,15 +30,6 @@ const customTextProps = {
 setCustomTextInput(customTextInputProps);
 setCustomText(customTextProps);
 
-const AppStack = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
-    navigationOptions: {
-      header: null,
-    },
-  },
-});
-
 const AuthStack = createStackNavigator(
   {
     Login: {
@@ -54,12 +46,9 @@ const AuthStack = createStackNavigator(
 );
 
 const Nav = createDrawerNavigator({
-  Home: {
-    screen: HomeScreen
-  },
-  Signout: {
-    screen: LoginScreen
-  }
+    Home: HomeScreen,
+    Settings: SettingsScreen,
+    Logout: LoginScreen,
 })
 
 export default createSwitchNavigator(

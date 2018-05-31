@@ -90,10 +90,6 @@ export default class Login extends Component {
   }
 
   const styles = StyleSheet.create({
-    loading: {
-      flex: 1,
-      marginTop: '75%'
-    },
     container: {
       flex: 1,
       backgroundColor: '#5f27cd',

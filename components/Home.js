@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, FlatList, Text, View, Alert } from 'react-native';
+import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 
 export default class Home extends Component {
   constructor(props) {
@@ -34,7 +35,17 @@ export default class Home extends Component {
           id: 9, title: 'Event 9', place: 'Lieu', date: '30/05/2018', hours: '18h'
         }
       ],
+      loading: true,
     };
+  }
+
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
+    });
+    this.setState({ loading: false });
   }
 
   EventListItemSeparator = () => {
@@ -55,9 +66,29 @@ export default class Home extends Component {
 
 
   render() {
+    if (this.state.loading) {
+      return <Expo.AppLoading />;
+    }
     return (
       <View style={styles.container}>
-
+        <Header style={styles.header}    >
+           <Left style={styles.left}>
+             <Button
+                transparent
+                onPress={() => this.props.navigation.openDrawer()}
+              >
+               <Icon
+                name='menu'
+               />
+             </Button>
+           </Left>
+           <Body style={styles.body}>
+             <Title>Header</Title>
+           </Body>
+           <Right style={styles.right}>
+            <Button><Icon name='menu' /></Button>
+           </Right>
+         </Header>
         <FlatList
           data={ this.state.EventList }
           ItemSeparatorComponent={this.EventListItemSeparator}
@@ -80,6 +111,20 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#341f97'
+  },
+  body: {
+    flex: 1,
+    paddingRight: 55
+  },
+  right: {
+    flex: 1,
+    display: 'none'
+  },
+  left: {
+    flex: 1
+  },
   container: {
     marginTop: 25,
     width: '100%',
