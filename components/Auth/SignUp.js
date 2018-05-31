@@ -15,32 +15,32 @@ export default class SignUp extends Component {
     });
 }
 
-    validateEmail(mail) {
-      if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-        {
-          return (true)
-        }
-          return (false)
-    };
+  validateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
+      {
+        return (true)
+      }
+      return (false)
+  }
 
     signUp = (email, password) => {
       // this.setState({errorMessage: ''});
       if (this.validateEmail(email) && password.length > 5 && this.state.password2 === password) {
         firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(() => this.props.navigation.navigate('Login'))
-        .catch(error => this.setState({ errorMessage: error.message }))
+          .then(() => this.props.navigation.navigate('Login'))
+          .catch(error => this.setState({ errorMessage: error.message }))
       }
       if (!this.validateEmail(email)) {
-        this.setState({errorMessage: 'Adresse email invalide'})
+        this.setState({ errorMessage: 'Adresse email invalide' });
       }
       if (password.length < 5) {
-        this.setState({errorMessage: 'Le mot de passe doit contenir au moins 5 caractères'})
+        this.setState({ errorMessage: 'Le mot de passe doit contenir au moins 5 caractères' })
       }
       if (this.state.password2 !== password) {
-        this.setState({errorMessage: 'Les mots de passe ne sont pas identiques'})
+        this.setState({ errorMessage: 'Les mots de passe ne sont pas identiques' })
       }
       if (password.length < 5 && !this.validateEmail(email)) {
-        this.setState({errorMessage: 'Mot de passe et adresse email invalides'})
+        this.setState({ errorMessage: 'Mot de passe et adresse email invalides' })
       }
     };
 

@@ -55,12 +55,12 @@ const AuthStack = createStackNavigator(
 
 const Nav = createDrawerNavigator({
   Home: {
-    screen: HomeScreen
+    screen: HomeScreen,
   },
   Signout: {
-    screen: LoginScreen
-  }
-})
+    screen: LoginScreen,
+  },
+});
 
 export default createSwitchNavigator(
   {
