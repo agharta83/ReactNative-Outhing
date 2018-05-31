@@ -18,6 +18,7 @@
   "rules" : {
     "arrow-body-style" : "warn",
     "linebreak-style" : "off",
-    "no-use-before-define" : "off"
+    "no-use-before-define" : "off",
+    "class-methods-use-this" : "off",
   }
 }

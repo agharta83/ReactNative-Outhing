@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, ActivityIndicator } from 'react-native';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import axios from 'axios';
 
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: true,
       EventList: [
         {
           id: 1, title: 'Event 1', place: 'Lieu', date: '30/05/2018', hours: '18h',
@@ -38,6 +40,16 @@ export default class Home extends Component {
         },
       ],
     };
+  }
+
+  componentDidMount() {
+    axios.get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city&facet=date_start&facet=date_end&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06&geofilter.distance=43.208178746742924%2C6.090545654296875%2C28369.55163075742')
+      .then((response) => {
+        console.warn(response.data);
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
   }
 
   EventListItemSeparator = () => (
