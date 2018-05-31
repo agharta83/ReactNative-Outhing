@@ -24,10 +24,19 @@ export default class Login extends Component {
     this.state = ({
       email: '',
       password: '',
+      errorMessage: false
     });
 }
     signIn = (email, password) => {
-      firebase.auth().signInWithEmailAndPassword(email, password).then(() => this.props.navigation.navigate('App'))
+      if (password != '' && email != '') {
+        firebase
+          .auth().signInWithEmailAndPassword(email, password)
+          .then(() => this.props.navigation.navigate('App'))
+          .catch(error => this.setState({ errorMessage: true }))
+      }
+      else {
+        this.setState({errorMessage: true});
+      }
     };
 
     render() {
@@ -38,7 +47,7 @@ export default class Login extends Component {
               barStyle="light-content"
             />
             <Text style={styles.title}>Bienvenue sur Outhing</Text>
-            {this.state.errorMessage ? <Text style={{color: "red"}}> {this.state.errorMessage}</Text> : <Text></Text>}
+            {this.state.errorMessage && <Text style={{color: 'red'}}>Mot de passe et/ou adresse non reconnus</Text>}
             <TextInput
               placeholder="Username or email"
               returnKeyType="next"
