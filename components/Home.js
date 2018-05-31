@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Alert, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 
 export default class Home extends Component {
@@ -40,12 +40,7 @@ export default class Home extends Component {
     };
   }
 
-  onPressItem = (item) => {
-    console.warn(item);
-  }
-
-  EventListItemSeparator = () => {
-    return (
+  EventListItemSeparator = () => (
       <View
         style={{
           height: 1,
@@ -53,61 +48,60 @@ export default class Home extends Component {
           backgroundColor: '#607D8B',
         }}
       />
-    );
-  }
+  )
 
-  GetItem(item) {
-    Alert.alert(item);
-  }
-
+  onItemPress = () => (
+    console.warn('touch!')
+  )
 
   render() {
     return (
-      <View style={styles.container}>
 
-        <SwipeListView
-          useFlatList
-          data={ this.state.EventList }
-          ItemSeparatorComponent={this.EventListItemSeparator}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) =>
+        <View style={styles.container}>
 
-            <View
-            style={styles.item} onPress={this.onPressItem}>
+          <SwipeListView
+            useFlatList
+            data={ this.state.EventList }
+            ItemSeparatorComponent={this.EventListItemSeparator}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) =>
 
-              <Text
-                style={styles.title}
-                onPress={this.GetItem.bind(this, item.title)}>
-                {item.title}
-              </Text>
+              <TouchableHighlight onPress={this.onItemPress} underlayColor='#5f27cd' activeOpacity={0.7}>
 
-                <View style={styles.content}>
+                <View style={styles.item}>
 
-                  <View style={styles.contentItem}>
-                    <Text style={styles.text}>{item.place}</Text>
-                    <Entypo name="location-pin" style={styles.icons} />
+                  <Text style={styles.title}>
+                  {item.title}
+                  </Text>
+
+                  <View style={styles.content}>
+
+                    <View style={styles.contentItem}>
+                      <Text style={styles.text}>{item.place}</Text>
+                      <Entypo name="location-pin" style={styles.icons} />
                     </View>
-                  <View style={styles.contentItem}>
-                    <Text style={styles.text}>{item.date}</Text>
-                    <MaterialIcons name="date-range" style={styles.icons} />
-                  </View>
-                  <View style={styles.contentItem}>
-                    <Text style={styles.text}>{item.hours}</Text>
-                    <Foundation name="clock" style={styles.icons} />
+
+                    <View style={styles.contentItem}>
+                      <Text style={styles.text}>{item.date}</Text>
+                      <MaterialIcons name="date-range" style={styles.icons} />
+                    </View>
+
+                    <View style={styles.contentItem}>
+                      <Text style={styles.text}>{item.hours}</Text>
+                      <Foundation name="clock" style={styles.icons} />
+                    </View>
+
                   </View>
 
                 </View>
-
-            </View>
-          }
+              </TouchableHighlight>
+              }
           renderHiddenItem={({ item }) => (
-            <View>
+            <View style={styles.itemBack}>
               <Text>Ne pas participer</Text>
               <Text>Participer</Text>
             </View>
           )}
-          leftOpenValue={75}
-          rightOpenValue={-75}
          />
         </View>
     );
@@ -123,6 +117,10 @@ const styles = StyleSheet.create({
   item: {
     padding: 10,
     width: '100%',
+    backgroundColor: '#5f27cd',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    justifyContent: 'center',
   },
   content: {
     flex: 1,
@@ -137,9 +135,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: 'bold',
+    color: 'white',
   },
   text: {
     fontSize: 14,
+    color: 'white',
     textAlign: 'right',
     padding: 10,
     paddingRight: 15,
@@ -148,5 +148,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     textAlign: 'right',
+  },
+  itemBack: {
+    alignItems: 'center',
+    backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
   },
 });
