@@ -1,74 +1,37 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-import { Font } from 'expo';
-import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
-import { setCustomTextInput, setCustomText } from 'react-native-global-props';
+import { Font, AppLoading } from 'expo';
+import {  setCustomView,  setCustomTextInput,  setCustomText,  setCustomImage,  setCustomTouchableOpacity
+} from 'react-native-global-props';
 
-import SignUpScreen from './components/Auth/SignUp';
-import LoginScreen from './components/Auth/Login';
-import HomeScreen from './components/Home';
+import Login from './components/Auth/Login';
+import Home from './components/Home';
 
-const customTextInputProps = {
-  underlineColorAndroid: 'rgba(0,0,0,0)',
-  style: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-  },
-};
-
-const customTextProps = {
-  style: {
-    fontSize: 16,
-    color: 'white'
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isLogged: true };
   }
-};
 
-setCustomTextInput(customTextInputProps);
-setCustomText(customTextProps);
+  render() {
+    if (this.state.isLogged) {
+      return (
+             <Home />
+      );
+    }
+    return (
+         <View style={styles.container}>
+             <Login />
+         </View>
+    );
+  }
+}
 
-const AppStack = createStackNavigator({
-  Home: {
-    screen: HomeScreen,
-    navigationOptions: {
-      header: null,
-    },
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#5f27cd',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
-
-const AuthStack = createStackNavigator(
-  {
-    Login: {
-      screen: LoginScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SignUp: SignUpScreen,
-  },
-  {
-    initialRouteName: 'Login',
-  },
-);
-
-const Nav = createDrawerNavigator({
-  Home: {
-    screen: HomeScreen,
-  },
-  Signout: {
-    screen: LoginScreen,
-  },
-});
-
-export default createSwitchNavigator(
-  {
-    App: Nav,
-    Auth: AuthStack,
-  },
-  {
-    initialRouteName: 'Auth',
-  },
-
-);

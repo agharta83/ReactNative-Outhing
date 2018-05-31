@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableHighlight } from 'react-native';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
+
 
 export default class Home extends Component {
   constructor(props) {
@@ -8,7 +10,7 @@ export default class Home extends Component {
     this.state = {
       EventList: [
         {
-          id: 1, title: 'Event 1', place: 'Lieu', date: '30/05/2018', hours: '18h', categories: '',
+          id: 1, title: 'Event 1', place: 'Lieu', date: '30/05/2018', hours: '18h',
         },
         {
           id: 2, title: 'Event 2', place: 'Lieu', date: '30/05/2018', hours: '18h',
@@ -38,6 +40,10 @@ export default class Home extends Component {
     };
   }
 
+  onPressItem = (item) => {
+    console.warn(item);
+  }
+
   EventListItemSeparator = () => {
     return (
       <View
@@ -59,13 +65,15 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
 
-        <FlatList
+        <SwipeListView
+          useFlatList
           data={ this.state.EventList }
           ItemSeparatorComponent={this.EventListItemSeparator}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) =>
+
             <View
-            style={styles.item}>
+            style={styles.item} onPress={this.onPressItem}>
 
               <Text
                 style={styles.title}
@@ -90,7 +98,16 @@ export default class Home extends Component {
 
                 </View>
 
-            </View>}
+            </View>
+          }
+          renderHiddenItem={({ item }) => (
+            <View>
+              <Text>Ne pas participer</Text>
+              <Text>Participer</Text>
+            </View>
+          )}
+          leftOpenValue={75}
+          rightOpenValue={-75}
          />
         </View>
     );
