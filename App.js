@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
 import { Font } from 'expo';
-import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
+import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
 import SignUpScreen from './components/Auth/SignUp';
@@ -53,12 +53,22 @@ const AuthStack = createStackNavigator(
   },
 );
 
+const Nav = createDrawerNavigator({
+  Home: {
+    screen: HomeScreen
+  },
+  Signout: {
+    screen: LoginScreen
+  }
+})
+
 export default createSwitchNavigator(
   {
-    App: AppStack,
+    App: Nav,
     Auth: AuthStack,
   },
   {
     initialRouteName: 'Auth',
   },
+
 );
