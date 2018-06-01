@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-import { Font, AppLoading } from 'expo';
-import {  setCustomView,  setCustomTextInput,  setCustomText,  setCustomImage,  setCustomTouchableOpacity
-} from 'react-native-global-props';
+import { StyleSheet, View } from 'react-native';
+
 
 import Login from './components/Auth/Login';
 import Home from './components/Home';

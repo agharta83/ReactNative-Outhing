@@ -20,5 +20,6 @@
     "linebreak-style" : "off",
     "no-use-before-define" : "off",
     "class-methods-use-this" : "off",
+    "react/no-deprecated" : "off"
   }
 }

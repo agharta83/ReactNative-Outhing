@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import axios from 'axios';
@@ -9,43 +10,15 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
-      EventList: [
-        {
-          id: 1, title: 'Event 1', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 2, title: 'Event 2', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 3, title: 'Event 3', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 4, title: 'Event 4', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 5, title: 'Event 5', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 6, title: 'Event 6', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 7, title: 'Event 7', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 8, title: 'Event 8', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-        {
-          id: 9, title: 'Event 9', place: 'Lieu', date: '30/05/2018', hours: '18h',
-        },
-      ],
+      eventList: [],
     };
   }
 
   componentDidMount() {
     axios.get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city&facet=date_start&facet=date_end&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06&geofilter.distance=43.208178746742924%2C6.090545654296875%2C28369.55163075742')
       .then((response) => {
-        console.warn(response.data);
+        this.setState({ eventList: response.data.records });
+        console.warn(this.state.eventList);
       })
       .catch((error) => {
         console.warn(error);
@@ -68,12 +41,29 @@ export default class Home extends Component {
 
   render() {
     return (
-
         <View style={styles.container}>
+          <Header style={styles.header}>
+             <Left style={styles.left}>
+               <Button
+                  transparent
+                  onPress={() => this.props.navigation.openDrawer()}
+                >
+                 <Icon
+                  name='menu'
+                 />
+               </Button>
+             </Left>
+             <Body style={styles.body}>
+               <Title>Suggestions</Title>
+             </Body>
+             <Right style={styles.right}>
+              <Button><Icon name='menu' /></Button>
+             </Right>
+           </Header>
 
           <SwipeListView
             useFlatList
-            data={ this.state.EventList }
+            data={ this.state.eventList }
             ItemSeparatorComponent={this.EventListItemSeparator}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) =>
@@ -83,7 +73,7 @@ export default class Home extends Component {
                 <View style={styles.item}>
 
                   <Text style={styles.title}>
-                  {item.title}
+                  {item.fields.title}
                   </Text>
 
                   <View style={styles.content}>
@@ -121,6 +111,20 @@ export default class Home extends Component {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#341f97',
+  },
+  body: {
+    flex: 1,
+    paddingRight: 55,
+  },
+  right: {
+    flex: 1,
+    display: 'none',
+  },
+  left: {
+    flex: 1,
+  },
   container: {
     marginTop: 25,
     width: '100%',
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 25,
+    fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
   },
