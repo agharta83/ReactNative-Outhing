@@ -79,17 +79,17 @@ export default class Home extends Component {
                   <View style={styles.content}>
 
                     <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.place}</Text>
+                      <Text style={styles.text}>{item.fields.city}</Text>
                       <Entypo name="location-pin" style={styles.icons} />
                     </View>
 
                     <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.date}</Text>
+                      <Text style={styles.text}>{item.fields.date_start}</Text>
                       <MaterialIcons name="date-range" style={styles.icons} />
                     </View>
 
                     <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.hours}</Text>
+                      <Text style={styles.text}>{item.fields.timetable}</Text>
                       <Foundation name="clock" style={styles.icons} />
                     </View>
 
