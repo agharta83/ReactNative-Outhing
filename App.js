@@ -8,6 +8,7 @@ import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 import HomeScreen from './components/Home';
 import SettingsScreen from './components/Settings';
+import AddEventScreen from './components/AddEvent';
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -49,6 +50,7 @@ const Nav = createDrawerNavigator({
     Home: HomeScreen,
     Settings: SettingsScreen,
     Logout: LoginScreen,
+    Add: AddEventScreen,
 })
 
 export default createSwitchNavigator(

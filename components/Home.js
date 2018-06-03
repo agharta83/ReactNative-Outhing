@@ -1,40 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, FlatList, Text, View, Alert } from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+import * as firebase from 'firebase';
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const customEvent = firebase.database().ref('customEvent');
 
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      EventList: [
-        {
-          id: 1, title: 'Event 1', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 2, title: 'Event 2', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 3, title: 'Event 3', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 4, title: 'Event 4', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 5, title: 'Event 5', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 6, title: 'Event 6', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 7, title: 'Event 7', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 8, title: 'Event 8', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        },
-        {
-          id: 9, title: 'Event 9', place: 'Lieu', date: '30/05/2018', hours: '18h'
-        }
-      ],
+      eventsList: [],
       loading: true,
     };
   }
@@ -46,6 +24,14 @@ export default class Home extends Component {
       Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
     });
     this.setState({ loading: false });
+  }
+
+  componentDidMount() {
+    customEvent.on('value', snapshot => {
+      this.setState({
+        eventsList: snapshot.val(),
+      })
+    })
   }
 
   EventListItemSeparator = () => {
@@ -66,9 +52,6 @@ export default class Home extends Component {
 
 
   render() {
-    if (this.state.loading) {
-      return <Expo.AppLoading />;
-    }
     return (
       <View style={styles.container}>
         <Header style={styles.header}    >
@@ -90,7 +73,7 @@ export default class Home extends Component {
            </Right>
          </Header>
         <FlatList
-          data={ this.state.EventList }
+          data={ this.state.eventsList }
           ItemSeparatorComponent={this.EventListItemSeparator}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) =>
@@ -102,7 +85,7 @@ export default class Home extends Component {
                 >{item.title}</Text>
               <Text style={styles.place}>{item.place}</Text>
               <Text style={styles.date}>{item.date}</Text>
-              <Text style={styles.hours}>{item.hours}</Text>
+              <Text style={styles.price}>{item.price} €</Text>
             </View>}
          />
         </View>
