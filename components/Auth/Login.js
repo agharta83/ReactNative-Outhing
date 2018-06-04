@@ -24,9 +24,22 @@ export default class Login extends Component {
     this.state = ({
       email: '',
       password: '',
-      errorMessage: false
+      errorMessage: false,
+      login: false
     });
 }
+
+    componentDidMount() {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          this.props.navigation.navigate('App');
+        }
+        if (!user) {
+          this.setState({login: true})
+        }
+      });
+    }
+
     signIn = (email, password) => {
       if (password != '' && email != '') {
         firebase
@@ -40,6 +53,13 @@ export default class Login extends Component {
     };
 
     render() {
+      if (!this.state.login) {
+        return (
+          <View style={styles.container}>
+            <Text style={styles.title}>Checking Login</Text>
+          </View>
+        )
+      }
       return (
         <View style={styles.container}>
           <KeyboardAvoidingView behavior="padding">
