@@ -1,29 +1,36 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
 
-import Login from './components/Auth/Login';
-import Home from './components/Home';
+import SignUpScreen from './components/Auth/SignUp';
+import LoginScreen from './components/Auth/Login';
+import HomeScreen from './components/Home';
+import SettingsScreen from './components/Settings';
+import LogoutScreen from './components/Logout';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLogged: true };
-  }
 
-  render() {
-    if (this.state.isLogged) {
-      return (
-             <Home />
-      );
-    }
-    return (
-         <View style={styles.container}>
-             <Login />
-         </View>
-    );
-  }
-}
+const customTextInputProps = {
+  underlineColorAndroid: 'rgba(0,0,0,0)',
+  style: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+  },
+};
+
+const customTextProps = {
+  style: {
+    fontSize: 16,
+    color: 'white',
+  },
+};
+
+setCustomTextInput(customTextInputProps);
+setCustomText(customTextProps);
 
 const styles = StyleSheet.create({
   container: {
@@ -33,3 +40,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+const AuthStack = createStackNavigator(
+  {
+    Login: {
+      screen: LoginScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    SignUp: SignUpScreen,
+  },
+  {
+    initialRouteName: 'Login',
+  },
+);
+
+const Nav = createDrawerNavigator({
+  Home: HomeScreen,
+  Settings: SettingsScreen,
+  Logout: LogoutScreen,
+});
+
+export default createSwitchNavigator(
+  {
+    App: Nav,
+    Auth: AuthStack,
+  },
+  {
+    initialRouteName: 'Auth',
+  },
+
+);
