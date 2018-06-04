@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, ImageBackground } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import axios from 'axios';
+import Moment from 'moment';
 
 
 export default class Home extends Component {
@@ -18,10 +19,6 @@ export default class Home extends Component {
     axios.get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city&facet=date_start&facet=date_end&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06&geofilter.distance=43.208178746742924%2C6.090545654296875%2C28369.55163075742')
       .then((response) => {
         this.setState({ eventList: response.data.records });
-        console.warn(this.state.eventList);
-      })
-      .catch((error) => {
-        console.warn(error);
       });
   }
 
@@ -41,6 +38,7 @@ export default class Home extends Component {
 
   render() {
     return (
+
         <View style={styles.container}>
           <Header style={styles.header}>
              <Left style={styles.left}>
@@ -68,15 +66,18 @@ export default class Home extends Component {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) =>
 
-              <TouchableHighlight onPress={this.onItemPress} underlayColor='#5f27cd' activeOpacity={0.7}>
+              <TouchableHighlight onPress={this.onItemPress} underlayColor='transparent' activeOpacity={0.7}>
 
-                <View style={styles.item}>
+                <ImageBackground
+                  style={[styles.item, styles.image]}
+                  source={{ uri: item.fields.image }}
+                >
 
+                <View style={styles.content}>
                   <Text style={styles.title}>
-                  {item.fields.title}
+                    {item.fields.title.toUpperCase()}
                   </Text>
 
-                  <View style={styles.content}>
 
                     <View style={styles.contentItem}>
                       <Text style={styles.text}>{item.fields.city}</Text>
@@ -89,13 +90,14 @@ export default class Home extends Component {
                     </View>
 
                     <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.fields.timetable}</Text>
+                      <Text style={styles.text}>
+                        {Moment(item.fields.timetable, 'YYYY-MM-DDTHH: mm: ss').format('HH:mm')}
+                      </Text>
                       <Foundation name="clock" style={styles.icons} />
                     </View>
 
-                  </View>
-
-                </View>
+                    </View>
+                  </ImageBackground>
               </TouchableHighlight>
               }
           renderHiddenItem={({ item }) => (
@@ -128,19 +130,18 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 25,
     width: '100%',
-    backgroundColor: '#5f27cd',
   },
   item: {
-    padding: 10,
     width: '100%',
-    backgroundColor: '#5f27cd',
     borderBottomColor: 'black',
     borderBottomWidth: 1,
     justifyContent: 'center',
+    backgroundColor: '#5f27cd',
   },
   content: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'rgba(0,0,0,.5)',
   },
   contentItem: {
     flex: 1,
