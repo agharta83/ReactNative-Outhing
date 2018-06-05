@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, Platform } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import { Constants, Location, Permissions } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 
@@ -12,18 +13,38 @@ export default class Home extends Component {
     super(props);
     this.state = {
       eventList: [],
-      loading: true
+      loading: true,
+      location: null,
+      errorMessage: null,
     };
   }
 
   async componentWillMount() {
     await Expo.Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
     });
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: ' Oops, this will not work on Sketch in an Android emulator. Try it on your device !',
+      });
+    } else {
+      this._getLocationAsync();
+    }
     this.setState({ loading: false });
   }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  };
 
   componentDidMount() {
     axios.get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city&facet=date_start&facet=date_end&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06&geofilter.distance=43.208178746742924%2C6.090545654296875%2C28369.55163075742')
@@ -47,6 +68,29 @@ export default class Home extends Component {
   )
 
   render() {
+    let text = 'Waiting ...';
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage;
+      return (
+        <View style={styles.container}>
+          <Text style={styles.paragraph}>{text}</Text>
+          </View>
+      );
+    } else if (this.state.location) {
+      text = JSON.stringify(this.state.location);
+      return (
+        <View style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: Constants.statusBarHeight,
+          backgroundColor: '#ecf0f1',
+        }}>
+          <Text style={{ margin: 24, fontSize: 18, textAlign: 'center' }}>{text}</Text>
+          </View>
+      );
+    }
+
     if (this.state.loading) {
       return <Expo.AppLoading />;
     }
