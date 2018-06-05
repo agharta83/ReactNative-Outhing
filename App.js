@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-import { Font } from 'expo';
+import { StyleSheet, View } from 'react-native';
 import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
+
 
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 import HomeScreen from './components/Home';
 import SettingsScreen from './components/Settings';
+import LogoutScreen from './components/Logout';
+
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -23,8 +25,8 @@ const customTextInputProps = {
 const customTextProps = {
   style: {
     fontSize: 16,
-    color: 'white'
-  }
+    color: 'white',
+  },
 };
 
 setCustomTextInput(customTextInputProps);
@@ -48,7 +50,7 @@ const AuthStack = createStackNavigator(
 const Nav = createDrawerNavigator({
     Home: HomeScreen,
     Settings: SettingsScreen,
-    Logout: LoginScreen,
+    Logout: LogoutScreen,
 })
 
 export default createSwitchNavigator(

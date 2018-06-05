@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
-import { setCustomTextInput } from 'react-native-global-props';
+
 // import { Font } from 'expo';
 import * as firebase from 'firebase';
 // Initialize Firebase
@@ -24,22 +23,42 @@ export default class Login extends Component {
     this.state = ({
       email: '',
       password: '',
-      errorMessage: false
+      errorMessage: false,
+      login: false,
     });
-}
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.navigation.navigate('App');
+      }
+      if (!user) {
+        this.setState({ login: true });
+      }
+    });
+  }
+
     signIn = (email, password) => {
-      if (password != '' && email != '') {
+      if (password !== '' && email !== '') {
         firebase
           .auth().signInWithEmailAndPassword(email, password)
           .then(() => this.props.navigation.navigate('App'))
-          .catch(error => this.setState({ errorMessage: true }))
+          .catch(error => this.setState({ errorMessage: true }));
       }
       else {
-        this.setState({errorMessage: true});
+        this.setState({ errorMessage: true });
       }
     };
 
     render() {
+      if (!this.state.login) {
+        return (
+          <View style={styles.container}>
+            <Text style={styles.title}>Checking Login</Text>
+          </View>
+        )
+      }
       return (
         <View style={styles.container}>
           <KeyboardAvoidingView behavior="padding">
@@ -87,37 +106,41 @@ export default class Login extends Component {
         </View>
       );
     }
-  }
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#5f27cd',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    title: {
-      fontSize: 28,
-      color: 'white',
-      fontWeight: "bold",
-      marginBottom: 50
-    },
-    input: {
-      height: 40,
-      backgroundColor: 'rgba(255,255,255,0.4)',
-      margin: 15,
-      color: '#fff',
-      paddingLeft: 10
-    },
-    buttonContainer: {
-      marginTop: 50,
-      padding: 15,
-      backgroundColor: "#9980FA",
-      borderRadius: 10
-    },
-    buttonText: {
-      textAlign: 'center',
-      color: '#fff',
-      fontWeight: '700'
-    }
-  })
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    marginTop: '75%',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#5f27cd',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 50,
+  },
+  input: {
+    height: 40,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    margin: 15,
+    color: '#fff',
+    paddingLeft: 10,
+  },
+  buttonContainer: {
+    marginTop: 50,
+    padding: 15,
+    backgroundColor: '#9980FA',
+    borderRadius: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: '700',
+  },
+});

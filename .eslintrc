@@ -17,6 +17,9 @@
   ],
   "rules" : {
     "arrow-body-style" : "warn",
-    "linebreak-style": "off"
+    "linebreak-style" : "off",
+    "no-use-before-define" : "off",
+    "class-methods-use-this" : "off",
+    "react/no-deprecated" : "off"
   }
 }
