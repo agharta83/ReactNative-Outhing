@@ -1,12 +1,57 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, Platform } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Platform, Animated } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
-import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { FlatList, RectButton } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Entypo, MaterialIcons, Foundation, FontAwesome } from '@expo/vector-icons';
 import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 
+
+const Row = ({ item }) => (
+  <RectButton style={styles.rectButton}>
+
+    <ImageBackground
+      style={[styles.item, styles.image]}
+      source={{ uri: item.fields.image }}
+    >
+
+    <View style={styles.content}>
+      <Text style={styles.title}>
+        {item.fields.title.toUpperCase()}
+      </Text>
+
+
+        <View style={styles.contentItem}>
+          <Text style={styles.text}>{item.fields.city}</Text>
+          <Entypo name="location-pin" style={styles.icons} />
+        </View>
+
+        <View style={styles.contentItem}>
+          <Text style={styles.text}>{item.fields.date_start}</Text>
+          <MaterialIcons name="date-range" style={styles.icons} />
+        </View>
+
+        <View style={styles.contentItem}>
+          <Text style={styles.text}>
+            {Moment(item.fields.timetable, 'YYYY-MM-DDTHH: mm: ss').format('HH:mm')}
+          </Text>
+          <Foundation name="clock" style={[styles.icons, { paddingRight: 12 }]} />
+        </View>
+
+        </View>
+      </ImageBackground>
+  </RectButton>
+);
+
+const SwipeableRow = ({ item, index }) => {
+  return (
+    <StyleSwipeableRow>
+      <Row item={item} />
+    </StyleSwipeableRow>
+  );
+};
 
 export default class Home extends Component {
   constructor(props) {
@@ -86,96 +131,151 @@ export default class Home extends Component {
     return (
 
         <View style={styles.container}>
+
           <Header style={styles.header}>
              <Left style={styles.left}>
                <Button
                   transparent
                   onPress={() => this.props.navigation.openDrawer()}
                 >
-                 <Icon
-                  name='menu'
-                 />
+                 <Icon name='menu'/>
                </Button>
              </Left>
+
              <Body style={styles.body}>
-               <Title>Suggestions</Title>
+               <Title style={styles.titleHeader}>Suggestions</Title>
              </Body>
+
              <Right style={styles.right}>
-              <Button><Icon name='menu' /></Button>
+
+                <Button transparent>
+                  <Icon name='search' />
+                </Button>
+
+                <Button transparent>
+                  <FontAwesome name='user' style={styles.btnRight}/>
+                </Button>
+
+                <Button transparent>
+                  <Icon name='more' />
+                </Button>
+
              </Right>
+
            </Header>
 
-          <SwipeListView
-            useFlatList
-            data={ this.state.eventList }
-            ItemSeparatorComponent={this.EventListItemSeparator}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) =>
-
-              <TouchableHighlight onPress={this.onItemPress} underlayColor='transparent' activeOpacity={0.7}>
-
-                <ImageBackground
-                  style={[styles.item, styles.image]}
-                  source={{ uri: item.fields.image }}
-                >
-
-                <View style={styles.content}>
-                  <Text style={styles.title}>
-                    {item.fields.title.toUpperCase()}
-                  </Text>
-
-
-                    <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.fields.city}</Text>
-                      <Entypo name="location-pin" style={styles.icons} />
-                    </View>
-
-                    <View style={styles.contentItem}>
-                      <Text style={styles.text}>{item.fields.date_start}</Text>
-                      <MaterialIcons name="date-range" style={styles.icons} />
-                    </View>
-
-                    <View style={styles.contentItem}>
-                      <Text style={styles.text}>
-                        {Moment(item.fields.timetable, 'YYYY-MM-DDTHH: mm: ss').format('HH:mm')}
-                      </Text>
-                      <Foundation name="clock" style={styles.icons} />
-                    </View>
-
-                    </View>
-                  </ImageBackground>
-              </TouchableHighlight>
-              }
-          renderHiddenItem={({ item }) => (
-            <View style={styles.itemBack}>
-              <Text>Ne pas participer</Text>
-              <Text>Participer</Text>
-            </View>
-          )}
-         />
+           <FlatList
+              data={ this.state.eventList }
+              ItemSeparatorComponent={this.EventListItemSeparator}
+              renderItem={({ item, index }) => (
+                <SwipeableRow item={item} index={index} />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+            />
         </View>
     );
   }
 }
 
+/*** STYLE ANIMATION ***/
+
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+
+class StyleSwipeableRow extends Component {
+  renderLeftActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [0, 80],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    });
+    const trans = dragX.interpolate({
+      inputRange: [0, 50, 100, 101],
+      outputRange: [-20, 0, 0, 1],
+    });
+    return (
+      <RectButton style={styles.leftAction} onPress={this.close}>
+        <AnimatedIcon
+          name="md-checkmark-circle-outline"
+          size={60}
+          style={[styles.actionIcon, { color: '#388e3c', transform: [{ scale }, { translateX: trans }] }]}
+        />
+      </RectButton>
+    );
+  };
+  renderRightActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+    const trans = dragX.interpolate({
+      inputRange: [-101, -100, -50, 0],
+      outputRange: [-1, 0, 0, 20],
+    });
+    return (
+      <RectButton style={styles.rightAction} onPress={this.close}>
+        <AnimatedIcon
+          name="md-close-circle"
+          size={60}
+          style={[styles.actionIcon, { color: '#dd2c00', transform: [{ scale }, { translateX: trans }] }]}
+        />
+      </RectButton>
+    );
+  };
+  updateRef = (ref) => {
+    this._swipeableRow = ref;
+  };
+  close = () => {
+    this._swipeableRow.close();
+  };
+  render() {
+    const { children } = this.props;
+    return (
+      <Swipeable
+        ref={this.updateRef}
+        friction={2}
+        leftThreshold={80}
+        rightThreshold={40}
+        renderLeftActions={this.renderLeftActions}
+        renderRightActions={this.renderRightActions}>
+        {children}
+      </Swipeable>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#341f97',
-  },
-  body: {
+  leftAction: {
     flex: 1,
-    paddingRight: 55,
+    backgroundColor: '#f0f9fa',
+    justifyContent: 'center',
   },
-  right: {
-    flex: 1,
-    display: 'none',
+  actionIcon: {
+    width: 60,
+    marginHorizontal: 10,
+    fontSize: 50,
   },
-  left: {
+  rightAction: {
+    alignItems: 'flex-end',
+    backgroundColor: '#f0f9fa',
     flex: 1,
+    justifyContent: 'center',
   },
   container: {
+    flex: 1,
     marginTop: 25,
     width: '100%',
+  },
+  header: {
+    height: 35,
+    backgroundColor: '#5f27cd',
+  },
+  titleHeader: {
+    fontSize: 18,
+  },
+  btnRight: {
+    color: 'white',
+    fontSize: 20,
   },
   item: {
     width: '100%',
@@ -199,6 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'white',
+    paddingLeft: 10,
   },
   text: {
     fontSize: 14,
@@ -211,13 +312,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
     textAlign: 'right',
+    paddingRight: 10,
   },
   itemBack: {
     alignItems: 'center',
-    backgroundColor: '#DDD',
+    backgroundColor: 'white',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
+  },
+  iconsBackContainer: {
+    backgroundColor: '#ecf0f1',
+    borderRadius: 50,
+    elevation: 6,
+  },
+  iconsBack: {
+    fontSize: 30,
+    color: 'black',
   },
 });
