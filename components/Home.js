@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableHighlight, ImageBackground, Platform }
 import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
 import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { Constants, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 
@@ -14,42 +14,56 @@ export default class Home extends Component {
     this.state = {
       eventList: [],
       loading: true,
-      location: null,
+      location: [],
       errorMessage: null,
     };
   }
 
   async componentWillMount() {
-    await Expo.Font.loadAsync({
+    await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       Ionicons: require('@expo/vector-icons/fonts/Ionicons.ttf'),
     });
+
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage: ' Oops, this will not work on Sketch in an Android emulator. Try it on your device !',
       });
     } else {
-      this._getLocationAsync();
+      this.getLocationAsync();
+      this.setState({ loading: false });
     }
-    this.setState({ loading: false });
   }
 
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  getLocationAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
       });
     }
-    let location = await Location.getCurrentPositionAsync({});
+    const location = await Location.getCurrentPositionAsync({});
     this.setState({ location });
+    console.log('==== 1. location ====', this.state.location);
+    this.getEventFromAPI();
   };
 
-  componentDidMount() {
-    axios.get('https://public.opendatasoft.com/api/records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city&facet=date_start&facet=date_end&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06&geofilter.distance=43.208178746742924%2C6.090545654296875%2C28369.55163075742')
+  getEventFromAPI = () => {
+    const apiURL = 'https://public.opendatasoft.com/api/';
+    const optionsURL = 'records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city';
+    const dateStart = '&facet=date_start';
+    const dateEnd = '&facet=date_end';
+    const otherOptions = '&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06';
+    const userLocation = `&geofilter.distance=${this.state.location.coords.latitude}%2C${this.state.location.coords.longitude}%2C30000`;
+
+    axios.get(apiURL + optionsURL + dateStart + dateEnd + otherOptions + userLocation)
       .then((response) => {
         this.setState({ eventList: response.data.records });
+        console.log('==== 2. eventlist ====', this.state);
+      })
+      .catch((error) => {
+        console.warn(error);
       });
   }
 
@@ -68,31 +82,8 @@ export default class Home extends Component {
   )
 
   render() {
-    let text = 'Waiting ...';
-    if (this.state.errorMessage) {
-      text = this.state.errorMessage;
-      return (
-        <View style={styles.container}>
-          <Text style={styles.paragraph}>{text}</Text>
-          </View>
-      );
-    } else if (this.state.location) {
-      text = JSON.stringify(this.state.location);
-      return (
-        <View style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingTop: Constants.statusBarHeight,
-          backgroundColor: '#ecf0f1',
-        }}>
-          <Text style={{ margin: 24, fontSize: 18, textAlign: 'center' }}>{text}</Text>
-          </View>
-      );
-    }
-
     if (this.state.loading) {
-      return <Expo.AppLoading />;
+      return <AppLoading />;
     }
     return (
 
