@@ -32,15 +32,6 @@ const customTextProps = {
 setCustomTextInput(customTextInputProps);
 setCustomText(customTextProps);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#5f27cd',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 const AuthStack = createStackNavigator(
   {
     Login: {
@@ -57,10 +48,10 @@ const AuthStack = createStackNavigator(
 );
 
 const Nav = createDrawerNavigator({
-  Home: HomeScreen,
-  Settings: SettingsScreen,
-  Logout: LogoutScreen,
-});
+    Home: HomeScreen,
+    Settings: SettingsScreen,
+    Logout: LogoutScreen,
+})
 
 export default createSwitchNavigator(
   {
