@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import { StyleSheet } from 'react-native';
+=======
+import { StyleSheet, View } from 'react-native';
+>>>>>>> 91a908c6bd48c98adc09ee9331636fd006f6cdcf
 import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
