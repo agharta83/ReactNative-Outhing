@@ -45,7 +45,6 @@ export default class Home extends Component {
     }
     const location = await Location.getCurrentPositionAsync({});
     this.setState({ location });
-    console.log('==== 1. location ====', this.state.location);
     this.getEventFromAPI();
   };
 
@@ -60,7 +59,6 @@ export default class Home extends Component {
     axios.get(apiURL + optionsURL + dateStart + dateEnd + otherOptions + userLocation)
       .then((response) => {
         this.setState({ eventList: response.data.records });
-        console.log('==== 2. eventlist ====', this.state);
       })
       .catch((error) => {
         console.warn(error);
