@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
+    flex: 1,
     marginTop: 25,
     width: '100%',
   },
