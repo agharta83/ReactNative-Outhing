@@ -8,7 +8,7 @@ import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 
-import AppHeader from './appHeader';
+import AppHeader from '../appHeader';
 
 const Row = ({ item }) => (
   <RectButton style={styles.rectButton}>

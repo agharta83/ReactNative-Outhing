@@ -1,18 +1,15 @@
-import { createStackNavigator, createDrawerNavigator, createSwitchNavigator, createBottomTabNavigator } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator, createSwitchNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 
-import HomeScreen from './components/Home';
-import SettingsScreen from './components/Settings';
-import LogoutScreen from './components/Logout';
+import HomeScreen from './components/Drawer/Home';
+import SettingsScreen from './components/Drawer/Settings';
+import LogoutScreen from './components/Drawer/Logout';
 
-import ProfilScreen from './components/Profil';
-import NotifScreen from './components/PagesProfil/notifications';
-import CalendarScreen from './components/PagesProfil/calendar';
-import FriendsScreen from './components/PagesProfil/friends';
+import DrawerNav from './components/DrawerNav';
+import MaterialBottomTabs from './components/ProfilScreenBottomTabs';
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -35,75 +32,40 @@ const customTextProps = {
 setCustomTextInput(customTextInputProps);
 setCustomText(customTextProps);
 
-const AppStackNavigator = createStackNavigator(
+const AuthStack = createStackNavigator({
+  Login:
+      {
+        screen: LoginScreen,
+        navigationOptions: {
+          header: null,
+        },
+      },
+  SignUp: { screen: SignUpScreen },
+});
+
+const AppStack = createStackNavigator(
   {
-    Login:
-    {
-      screen: LoginScreen,
+    DrawerNav: {
+      screen: DrawerNav,
       navigationOptions: {
         header: null,
       },
     },
-    SignUp: { screen: SignUpScreen },
-    Home: { screen: HomeScreen },
-    Profil: ProfilScreen,
+    BottomTabs: {
+      screen: MaterialBottomTabs,
+    },
   },
   {
-    initialRouteName: 'Profil',
+    initialRouteName: 'DrawerNav',
   },
 );
 
-const AppDrawerNavigator = createDrawerNavigator({
-  Home: { screen: HomeScreen },
-  Settings: { screen: SettingsScreen },
-  Logout: { screen: LogoutScreen },
-});
-
 export default createSwitchNavigator(
   {
-    App: AppDrawerNavigator,
-    Auth: AppStackNavigator,
+    App: AppStack,
+    Auth: AuthStack,
   },
   {
     initialRouteName: 'Auth',
   },
 );
-
-const ProfilScreenTabNavigator = createBottomTabNavigator({
-  Profil: {
-    screen: ProfilScreen,
-    navigationOptions: {
-      tabBarLabel: 'Profil',
-      tabBarIcon: () => (
-        <FontAwesome name='user' size={24} />
-      ),
-    },
-  },
-  Calendar: {
-    screen: CalendarScreen,
-    navigationOptions: {
-      tabBarLabel: 'Agenda',
-      tabBarIcon: () => (
-        <FontAwesome name='calendar' size={24} />
-      ),
-    },
-  },
-  Notifications: {
-    screen: NotifScreen,
-    navigationOptions: {
-      tabBarLabel: 'Notifications',
-      tabBarIcon: () => (
-        <MaterialIcons name='notifications' size={24} />
-      ),
-    },
-  },
-  Friends: {
-    screen: FriendsScreen,
-    navigationOptions: {
-      tabBarLabel: 'Friends',
-      tabBarIcon: () => (
-        <FontAwesome name='group' size={24} />
-      ),
-    },
-  },
-});

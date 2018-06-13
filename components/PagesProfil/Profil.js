@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Card, CardItem, Body, Text, Thumbnail, Content, Container, Header } from 'native-base';
-import { Icon } from '@expo/vector-icons/MaterialIcons';
+import { Card, CardItem, Body, Text, Thumbnail, Content } from 'native-base';
+import { MaterialIcons } from '@expo/vector-icons';
 
-export default class ProfilScreen extends Component {
+export default class Profil extends Component {
   render() {
     return (
-      <Container>
-        <Header />
+
         <Content>
           <Card>
             <CardItem>
@@ -15,7 +14,7 @@ export default class ProfilScreen extends Component {
                 <View style={styles.body}>
                   <View style={styles.photo}>
                     <Thumbnail style={styles.thumbnail} source={{ uri: 'https://www.jokeme.fr/images/simpson-marge.jpg' }} />
-                    <Icon style={styles.iconAddPhoto} name="add-a-photo" />
+                    <MaterialIcons style={styles.iconAddPhoto} name="add-a-photo" />
                   </View>
                   <View style={styles.profilInfos}>
                     <Text style={styles.profilName}>Nom Prénom</Text>
@@ -35,7 +34,7 @@ export default class ProfilScreen extends Component {
             </CardItem>
           </Card>
         </Content>
-    </Container>
+
     );
   }
 }

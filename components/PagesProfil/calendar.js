@@ -5,10 +5,8 @@ export default class Calendar extends Component {
   render() {
     return (
       <View>
-        <Text>Calendrier</Text>
+        <Text style={{ color: 'black' }}>Calendrier</Text>
       </View>
     );
   }
 }
-
-module.export = Calendar;

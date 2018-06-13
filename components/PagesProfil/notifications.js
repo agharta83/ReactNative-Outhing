@@ -5,10 +5,8 @@ export default class Notifications extends Component {
   render() {
     return (
       <View>
-        <Text>Notifications</Text>
+        <Text style={{ color: 'black' }}>Notifications</Text>
       </View>
     );
   }
 }
-
-module.export = Notifications;

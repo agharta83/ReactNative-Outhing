@@ -5,10 +5,8 @@ export default class Friends extends Component {
   render() {
     return (
       <View>
-        <Text>Friends</Text>
+        <Text style={{ color: 'black' }}>Friends</Text>
       </View>
     );
   }
 }
-
-module.export = Friends;

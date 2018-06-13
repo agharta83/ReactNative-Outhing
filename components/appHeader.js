@@ -28,7 +28,7 @@ export default class AppHeader extends Component {
 
             <Button
               transparent
-              onPress={() => this.props.navigation.navigate('Profil')}
+              onPress={() => this.props.navigation.push('BottomTabs')}
             >
               <FontAwesome name='user' style={styles.btnRight}/>
             </Button>
