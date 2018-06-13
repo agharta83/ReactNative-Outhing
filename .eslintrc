@@ -22,5 +22,6 @@
     "class-methods-use-this" : "off",
     "react/no-deprecated" : "off",
     "no-underscore-dangle" : "off",
+    "react/display-name" : "off"
   }
 }

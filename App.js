@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
-import { createSwitchNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
-
 
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
-import HomeScreen from './components/Home';
-import SettingsScreen from './components/Settings';
-import LogoutScreen from './components/Logout';
 
+import DrawerNav from './components/DrawerNav';
+import MaterialBottomTabs from './components/ProfilScreenBottomTabs';
+
+// TODO Change backgroundColor of StatusBas
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -32,34 +30,40 @@ const customTextProps = {
 setCustomTextInput(customTextInputProps);
 setCustomText(customTextProps);
 
-const AuthStack = createStackNavigator(
+const AuthStack = createStackNavigator({
+  Login:
+      {
+        screen: LoginScreen,
+        navigationOptions: {
+          header: null,
+        },
+      },
+  SignUp: { screen: SignUpScreen },
+});
+
+const AppStack = createStackNavigator(
   {
-    Login: {
-      screen: LoginScreen,
+    DrawerNav: {
+      screen: DrawerNav,
       navigationOptions: {
         header: null,
       },
     },
-    SignUp: SignUpScreen,
+    BottomTabs: {
+      screen: MaterialBottomTabs,
+    },
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'DrawerNav',
   },
 );
 
-const Nav = createDrawerNavigator({
-    Home: HomeScreen,
-    Settings: SettingsScreen,
-    Logout: LogoutScreen,
-})
-
 export default createSwitchNavigator(
   {
-    App: Nav,
+    App: AppStack,
     Auth: AuthStack,
   },
   {
     initialRouteName: 'Auth',
   },
-
 );

@@ -1,13 +1,19 @@
-import React, { Component } from 'react';
 import { StyleSheet, Text, View, ImageBackground, Platform, Animated } from 'react-native';
-import { Header, Left, Body, Right, Button, Icon, Title } from 'native-base';
+import React, { Component } from 'react';
 import { FlatList, RectButton } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { Entypo, MaterialIcons, Foundation, FontAwesome } from '@expo/vector-icons';
+import { Entypo, MaterialIcons, Foundation } from '@expo/vector-icons';
+import { Icon } from 'native-base';
 import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 
+import AppHeader from '../appHeader';
+
+// TODO Review code request api with date = today
+// TODO Animate flatlist with transition
+// TODO Component Loading
+// TODO Function for add / delete event and change view with state
 
 const Row = ({ item }) => (
   <RectButton style={styles.rectButton}>
@@ -120,10 +126,6 @@ export default class Home extends Component {
       />
   )
 
-  onItemPress = () => (
-    console.warn('touch!')
-  )
-
   render() {
     if (this.state.loading) {
       return <AppLoading />;
@@ -132,37 +134,7 @@ export default class Home extends Component {
 
         <View style={styles.container}>
 
-          <Header style={styles.header}>
-             <Left style={styles.left}>
-               <Button
-                  transparent
-                  onPress={() => this.props.navigation.openDrawer()}
-                >
-                 <Icon name='menu'/>
-               </Button>
-             </Left>
-
-             <Body style={styles.body}>
-               <Title style={styles.titleHeader}>Suggestions</Title>
-             </Body>
-
-             <Right style={styles.right}>
-
-                <Button transparent>
-                  <Icon name='search' />
-                </Button>
-
-                <Button transparent>
-                  <FontAwesome name='user' style={styles.btnRight}/>
-                </Button>
-
-                <Button transparent>
-                  <Icon name='more' />
-                </Button>
-
-             </Right>
-
-           </Header>
+          <AppHeader navigation={this.props.navigation} />
 
            <FlatList
               data={ this.state.eventList }
@@ -222,6 +194,7 @@ class StyleSwipeableRow extends Component {
       </RectButton>
     );
   };
+
   updateRef = (ref) => {
     this._swipeableRow = ref;
   };
@@ -266,17 +239,6 @@ const styles = StyleSheet.create({
     marginTop: 25,
     width: '100%',
   },
-  header: {
-    height: 35,
-    backgroundColor: '#5f27cd',
-  },
-  titleHeader: {
-    fontSize: 18,
-  },
-  btnRight: {
-    color: 'white',
-    fontSize: 20,
-  },
   item: {
     width: '100%',
     borderBottomColor: 'black',
@@ -298,19 +260,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#e4e7ec',
     paddingLeft: 10,
   },
   text: {
     fontSize: 14,
-    color: 'white',
+    color: '#e4e7ec',
     textAlign: 'right',
     padding: 10,
     paddingRight: 15,
   },
   icons: {
     fontSize: 20,
-    color: 'white',
+    color: '#e4e7ec',
     textAlign: 'right',
     paddingRight: 10,
   },

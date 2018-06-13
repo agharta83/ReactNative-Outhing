@@ -45,8 +45,7 @@ export default class Login extends Component {
           .auth().signInWithEmailAndPassword(email, password)
           .then(() => this.props.navigation.navigate('App'))
           .catch(error => this.setState({ errorMessage: true }));
-      }
-      else {
+      } else {
         this.setState({ errorMessage: true });
       }
     };
@@ -57,7 +56,7 @@ export default class Login extends Component {
           <View style={styles.container}>
             <Text style={styles.title}>Checking Login</Text>
           </View>
-        )
+        );
       }
       return (
         <View style={styles.container}>
