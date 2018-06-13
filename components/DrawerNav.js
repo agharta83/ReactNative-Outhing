@@ -6,6 +6,8 @@ import HomeScreen from './Drawer/Home';
 import SettingScreen from './Drawer/Settings';
 import LogoutScreen from './Drawer/Logout';
 
+// TODO Styling drawer navigation
+
 class Home extends Component {
   static navigationOptions = {
     drawerLabel: 'Home',
@@ -37,10 +39,10 @@ class Setting extends Component {
 }
 
 class Logout extends Component {
-  static navigationOption = {
+  static navigationOptions = {
     drawerLabel: 'Logout',
     drawerIcon: ({ tintColor }) => (
-      <MaterialCommunityIcons name='logout' color={tintColor} size={24} navigation={this.props.navigation} />
+      <MaterialCommunityIcons name='logout' color={tintColor} size={24} />
     ),
   };
 
@@ -55,4 +57,6 @@ export default createDrawerNavigator({
   Home,
   Setting,
   Logout,
+}, {
+
 });

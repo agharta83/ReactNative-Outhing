@@ -4,12 +4,10 @@ import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 
-import HomeScreen from './components/Drawer/Home';
-import SettingsScreen from './components/Drawer/Settings';
-import LogoutScreen from './components/Drawer/Logout';
-
 import DrawerNav from './components/DrawerNav';
 import MaterialBottomTabs from './components/ProfilScreenBottomTabs';
+
+// TODO Change backgroundColor of StatusBas
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',

@@ -12,7 +12,7 @@ export default class AppHeader extends Component {
               transparent
               onPress={() => this.props.navigation.openDrawer()}
             >
-              <Icon name='menu'/>
+              <Icon name='menu' style={styles.btnLeft}/>
             </Button>
           </Left>
 
@@ -50,13 +50,18 @@ module.export = AppHeader;
 const styles = StyleSheet.create({
   header: {
     height: 45,
-    backgroundColor: '#5f27cd',
+    backgroundColor: '#594192',
   },
   titleHeader: {
     fontSize: 18,
+    color: '#e4e7ec',
   },
   btnRight: {
-    color: 'white',
+    color: '#e4e7ec',
     fontSize: 20,
+  },
+  btnLeft: {
+    color: '#e4e7ec',
+    fontSize: 26,
   },
 });

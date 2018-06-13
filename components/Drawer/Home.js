@@ -10,6 +10,11 @@ import Moment from 'moment';
 
 import AppHeader from '../appHeader';
 
+// TODO Review code request api with date = today
+// TODO Animate flatlist with transition
+// TODO Component Loading
+// TODO Function for add / delete event and change view with state
+
 const Row = ({ item }) => (
   <RectButton style={styles.rectButton}>
 
@@ -255,19 +260,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#e4e7ec',
     paddingLeft: 10,
   },
   text: {
     fontSize: 14,
-    color: 'white',
+    color: '#e4e7ec',
     textAlign: 'right',
     padding: 10,
     paddingRight: 15,
   },
   icons: {
     fontSize: 20,
-    color: 'white',
+    color: '#e4e7ec',
     textAlign: 'right',
     paddingRight: 10,
   },

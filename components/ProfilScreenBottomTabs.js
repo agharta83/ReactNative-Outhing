@@ -61,4 +61,15 @@ export default createMaterialBottomTabNavigator({
   Calendar,
   Friends,
   Notifications,
+}, {
+  initialRouteName: 'Profil',
+  activeTintColor: '#f0edf6',
+  inactiveTintColor: '#3e2465',
+  barStyle: { backgroundColor: '#594192' },
+}, {
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: '#594192', // TODO Background header in profilscreen, don't work.
+    },
+  },
 });

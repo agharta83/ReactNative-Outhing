@@ -6,7 +6,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default class Profil extends Component {
   render() {
     return (
-
         <Content>
           <Card>
             <CardItem>
@@ -34,7 +33,6 @@ export default class Profil extends Component {
             </CardItem>
           </Card>
         </Content>
-
     );
   }
 }
