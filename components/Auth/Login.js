@@ -16,6 +16,8 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
+// TODO styling input text : react-native-textinput-effects
+
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -111,12 +113,6 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     marginTop: '75%',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#5f27cd',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 28,

@@ -12,7 +12,7 @@ class Home extends Component {
   static navigationOptions = {
     drawerLabel: 'Home',
     drawerIcon: ({ tintColor }) => (
-      <FontAwesome name='home' color={tintColor} size={24}  />
+      <FontAwesome name='home' color={tintColor} size={24} />
     ),
   };
 

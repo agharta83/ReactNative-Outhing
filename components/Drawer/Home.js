@@ -12,7 +12,7 @@ import AppHeader from '../appHeader';
 
 // TODO Review code request api with date = today
 // TODO Animate flatlist with transition
-// TODO Component Loading
+// TODO Component Loading (react-native-spinkit)
 // TODO Function for add / delete event and change view with state
 
 const Row = ({ item }) => (
