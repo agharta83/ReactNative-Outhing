@@ -7,6 +7,7 @@ import { Icon } from 'native-base';
 import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
+import * as firebase from 'firebase';
 
 import AppHeader from '../appHeader';
 
@@ -14,6 +15,8 @@ import AppHeader from '../appHeader';
 // TODO Animate flatlist with transition
 // TODO Component Loading
 // TODO Function for add / delete event and change view with state
+
+const customEvent = firebase.database().ref('customEvent');
 
 const Row = ({ item }) => (
   <RectButton style={styles.rectButton}>
@@ -64,6 +67,11 @@ export default class Home extends Component {
     super(props);
     this.state = {
       eventList: [],
+      customEventList: [],
+      allEvents: [],
+      lonIds: [],
+      latIds: [],
+      allIds: [],
       loading: true,
       location: [],
       errorMessage: null,
@@ -87,6 +95,14 @@ export default class Home extends Component {
     }
   }
 
+  componentDidMount() {
+    customEvent.on('value', (snapshot) => {
+      this.setState({
+        customEventList: snapshot.val(),
+      });
+    });
+  }
+
   getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -96,10 +112,10 @@ export default class Home extends Component {
     }
     const location = await Location.getCurrentPositionAsync({});
     this.setState({ location });
-    this.getEventFromAPI();
+    this.getEvents();
   };
 
-  getEventFromAPI = () => {
+  getEvents = async () => {
     const apiURL = 'https://public.opendatasoft.com/api/';
     const optionsURL = 'records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city';
     const dateStart = '&facet=date_start';
@@ -107,13 +123,33 @@ export default class Home extends Component {
     const otherOptions = '&facet=pricing_info&facet=updated_at&facet=city_district&refine.date_start=2018%2F06';
     const userLocation = `&geofilter.distance=${this.state.location.coords.latitude}%2C${this.state.location.coords.longitude}%2C30000`;
 
-    axios.get(apiURL + optionsURL + dateStart + dateEnd + otherOptions + userLocation)
+    await axios.get(apiURL + optionsURL + dateStart + dateEnd + otherOptions + userLocation)
       .then((response) => {
         this.setState({ eventList: response.data.records });
       })
       .catch((error) => {
         console.warn(error);
       });
+    const allEvents = [...this.state.customEventList, ...this.state.eventList];
+    this.setState({ allEvents });
+    
+    const range = 0.2698;
+    const latMin = this.state.location.coords.latitude - range;
+    const latMax = this.state.location.coords.latitude + range;
+    const lonMin = this.state.location.coords.longitude - range;
+    const lonMax = this.state.location.coords.longitude + range;
+    customEvent.orderByChild('fields/latlon/lat').startAt(latMin).endAt(latMax).on('child_added', (snapshot) => {
+      const latId = snapshot.val().fields.id;
+      this.setState({ latIds: [...this.state.latIds, latId] });
+      //console.log('lat:', this.state.latIds);
+    });
+    customEvent.orderByChild('fields/latlon/lon').startAt(lonMin).endAt(lonMax).on('child_added', (snapshot) => {
+      const lonId = snapshot.val().fields.id;
+      this.setState({ lonIds: [...this.state.lonIds, lonId] });
+      //console.log('lon :', this.state.lonIds);
+    });
+    this.setState({ filteredIds: this.state.latIds.filter(id => this.state.lonIds.indexOf(id) > -1) });
+    console.log('résultat:', this.state.filteredIds);
   }
 
   EventListItemSeparator = () => (
@@ -137,7 +173,7 @@ export default class Home extends Component {
           <AppHeader navigation={this.props.navigation} />
 
            <FlatList
-              data={ this.state.eventList }
+              data={ this.state.allEvents }
               ItemSeparatorComponent={this.EventListItemSeparator}
               renderItem={({ item, index }) => (
                 <SwipeableRow item={item} index={index} />

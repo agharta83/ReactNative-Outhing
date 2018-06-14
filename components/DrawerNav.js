@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { createDrawerNavigator } from 'react-navigation';
-import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
 
 import HomeScreen from './Drawer/Home';
 import SettingScreen from './Drawer/Settings';
 import LogoutScreen from './Drawer/Logout';
+import AddEventScreen from './Drawer/AddEvent';
 
 // TODO Styling drawer navigation
 
@@ -53,10 +54,26 @@ class Logout extends Component {
   }
 }
 
+class Add extends Component {
+  static navigationOptions = {
+    drawerLabel: 'Add',
+    drawerIcon: ({ tintColor }) => (
+      <Entypo name='add-to-list' color={tintColor} size={24} />
+    ),
+  };
+
+  render() {
+    return (
+      <AddEventScreen id='add' navigation={this.props.navigation} />
+    );
+  }
+}
+
 export default createDrawerNavigator({
   Home,
   Setting,
   Logout,
+  Add,
 }, {
 
 });
