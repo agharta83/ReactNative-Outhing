@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, StatusBar } from 'react-native';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
 import SwitchNavigator from './components/SwitchNavigation';

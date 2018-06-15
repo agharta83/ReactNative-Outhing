@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
+import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
+import { Hoshi } from 'react-native-textinput-effects';
+
 // import { Font } from 'expo';
 import * as firebase from 'firebase';
 
@@ -9,6 +12,8 @@ export default class SignUp extends Component {
 
     this.state = ({
       email: '',
+      username: '',
+      city: '',
       password: '',
       password2: '',
       errorMessage: '',
@@ -46,29 +51,57 @@ export default class SignUp extends Component {
 
     render() {
       return (
-      <View>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <StatusBar
-            barStyle="light-content"
-          />
+      <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding">
+          <StatusBar barStyle="light-content" />
+
           <Text style={styles.title}>Sign Up</Text>
           {this.state.errorMessage !== '' && <Text style={styles.error}>{this.state.errorMessage}</Text>}
-          <TextInput
-            placeholder="Username or email"
-            returnKeyType="next"
-            onSubmitEditing={() => this.nextPassword.focus()}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            onChangeText={(email)=> this.setState({email})}
-            style={styles.input}
-          />
+
+          <View style={{ backgroundColor: '#594192' }}>
+
+            <Hoshi
+            // Styling props
+              label={'Email'}
+              borderColor={'#5fbbe7'}
+              maskColor={'#594192'}
+              inputStyle= {{
+                backgroundColor: '#594192',
+                borderColor: '#594192',
+                color: '#e4e7ec',
+              }}
+              // TextInput props
+              onSubmitEditing={() => this.nextUsername.focus()}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              onChangeText={email => this.setState({ email })}
+            />
+
+            <Hoshi
+              // Styling props
+              label={'Username'}
+              borderColor={'#5fbbe7'}
+              maskColor={'#594192'}
+              inputStyle= {{
+                backgroundColor: '#594192',
+                borderColor: '#594192',
+                color: '#e4e7ec',
+              }}
+              // TextInput props
+              returnKeyType="next"
+              onSubmitEditing={() => this.usernameInput.focus()}
+              onChangeText={username => this.setState({ username })}
+            />
+
+          </View>
+
           <TextInput
             placeholder="Password"
             returnKeyType="next"
             onSubmitEditing={() => this.passwordInput.focus()}
-            ref={(input) => this.nextPassword = input}
+            ref={input => this.nextPassword = input}
             secureTextEntry
-            onChangeText={(password) => this.setState({password})}
+            onChangeText={password => this.setState({ password })}
             style={styles.input}
           />
           <TextInput
@@ -95,25 +128,29 @@ export default class SignUp extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    height: '100%',
-    backgroundColor: '#5f27cd',
+    flex: 1,
+    backgroundColor: '#594192',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     textAlign: 'center',
     fontSize: 28,
-    color: 'white',
+    color: '#e4e7ec',
     fontWeight: 'bold',
     marginBottom: 50,
   },
+  form: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.4)',
+    height: 15,
+    backgroundColor: '#594192',
+    borderBottomWidth: 0,
     margin: 15,
-    color: '#fff',
     paddingLeft: 10,
+    marginTop: 4,
     width: 300,
   },
   buttonContainer: {
@@ -124,11 +161,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    color: '#fff',
+    color: '#e4e7ec',
     fontWeight: '700',
   },
   error: {
     color: 'red',
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 });

@@ -15,10 +15,16 @@ const AuthStack = createStackNavigator({
     },
   },
   Login:
-      {
-        screen: LoginScreen,
+      { screen: LoginScreen },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      headerTintColor: '#e4e7ec',
+      headerStyle: {
+        backgroundColor: '#594192',
       },
-  SignUp: { screen: SignUpScreen },
+    },
+  },
 });
 
 const AppStack = createStackNavigator(

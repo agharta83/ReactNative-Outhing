@@ -13,14 +13,14 @@ export default class Welcome extends Component {
 
         <View style={styles.buttonsContainer}>
 
-          <TouchableBounce>
-            <View style={styles.buttons} onPress={() => this.props.navigation.navigate('Login')}>
+          <TouchableBounce onPress={() => this.props.navigation.navigate('Login')}>
+            <View style={styles.buttons}>
               <Text style={styles.btnText}>LOGIN</Text>
             </View>
           </TouchableBounce>
 
-          <TouchableBounce>
-            <View style={styles.buttons} onPress={() => this.props.navigation.navigate('SignUp')}>
+          <TouchableBounce onPress={() => this.props.navigation.navigate('SignUp')}>
+            <View style={styles.buttons}>
               <Text style={styles.btnText}>SIGN UP</Text>
             </View>
           </TouchableBounce>
