@@ -33,7 +33,7 @@ export default class Welcome extends Component {
 }
 
 
-// Styling Coomponent for TouchableOpacity
+// Styling Component for TouchableOpacity
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 class TouchableBounce extends React.Component {
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     textAlignVertical: 'center',
-    color: '#fff',
+    color: '#e4e7ec',
     fontWeight: '700',
   },
 });
