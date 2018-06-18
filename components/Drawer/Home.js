@@ -8,14 +8,12 @@ import { Constants, Location, Permissions, AppLoading, Font } from 'expo';
 import axios from 'axios';
 import Moment from 'moment';
 import * as firebase from 'firebase';
-
 import AppHeader from '../appHeader';
 
 // TODO Review code request api with date = today
 // TODO Animate flatlist with transition
 // TODO Component Loading
 // TODO Function for add / delete event and change view with state
-
 const customEvent = firebase.database().ref('customEvent');
 
 const Row = ({ item }) => (
@@ -72,13 +70,14 @@ export default class Home extends Component {
       lonIds: [],
       latIds: [],
       allIds: [],
+      filteredIds : [],
       loading: true,
       location: [],
       errorMessage: null,
     };
   }
 
-  async componentWillMount() {
+  async componentDidMount() {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
@@ -93,14 +92,22 @@ export default class Home extends Component {
       this.getLocationAsync();
       this.setState({ loading: false });
     }
-  }
-
-  componentDidMount() {
     customEvent.on('value', (snapshot) => {
       this.setState({
-        customEventList: snapshot.val(),
+        customEventLists: snapshot.val(),
       });
     });
+
+    await this.getLocationAsync();
+    console.log('get location access');
+    await this.getEventsFromApi();
+    console.log('get events from api');
+    await this.queryLocation();
+    console.log('get query location');
+    await this.getEventsFromUsers();
+    console.log('get custom events');
+    await this.mergeEvents();
+    console.log('merge done');
   }
 
   getLocationAsync = async () => {
@@ -111,11 +118,11 @@ export default class Home extends Component {
       });
     }
     const location = await Location.getCurrentPositionAsync({});
+    const range = 0.2698;
     this.setState({ location });
-    this.getEvents();
   };
 
-  getEvents = async () => {
+  getEventsFromApi = async () => {
     const apiURL = 'https://public.opendatasoft.com/api/';
     const optionsURL = 'records/1.0/search/?dataset=evenements-publics-cibul&facet=tags&facet=placename&facet=department&facet=region&facet=city';
     const dateStart = '&facet=date_start';
@@ -130,27 +137,41 @@ export default class Home extends Component {
       .catch((error) => {
         console.warn(error);
       });
-    const allEvents = [...this.state.customEventList, ...this.state.eventList];
-    this.setState({ allEvents });
-    
+  }
+
+  queryLocation() {
     const range = 0.2698;
     const latMin = this.state.location.coords.latitude - range;
     const latMax = this.state.location.coords.latitude + range;
     const lonMin = this.state.location.coords.longitude - range;
     const lonMax = this.state.location.coords.longitude + range;
-    customEvent.orderByChild('fields/latlon/lat').startAt(latMin).endAt(latMax).on('child_added', (snapshot) => {
+
+    customEvent.orderByChild('/fields/latlon/lat').startAt(latMin).endAt(latMax).on('child_added', (snapshot) => {
       const latId = snapshot.val().fields.id;
       this.setState({ latIds: [...this.state.latIds, latId] });
-      //console.log('lat:', this.state.latIds);
     });
-    customEvent.orderByChild('fields/latlon/lon').startAt(lonMin).endAt(lonMax).on('child_added', (snapshot) => {
-      const lonId = snapshot.val().fields.id;
+    customEvent.orderByChild('fields/latlon/lon').startAt(lonMin).endAt(lonMax).on('child_added', (snapshota) => {
+      const lonId = snapshota.val().fields.id;
       this.setState({ lonIds: [...this.state.lonIds, lonId] });
-      //console.log('lon :', this.state.lonIds);
     });
     this.setState({ filteredIds: this.state.latIds.filter(id => this.state.lonIds.indexOf(id) > -1) });
-    console.log('résultat:', this.state.filteredIds);
   }
+
+  getEventsFromUsers = () => {
+      const table = this.state.filteredIds;
+      table.forEach((id) => {
+        customEvent.orderByKey().equalTo(`${id}`).on('child_added', (snapshot) => {
+          const match = snapshot.val();
+          this.setState({ customEventList: [ ...this.state.customEventList, match ] });
+        });
+      });
+  }
+
+  mergeEvents = () => {
+    const allEvents = [...this.state.customEventList, ...this.state.eventList];
+    this.setState({ allEvents });
+  }
+
 
   EventListItemSeparator = () => (
       <View
