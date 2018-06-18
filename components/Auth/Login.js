@@ -21,8 +21,7 @@ export default class Login extends Component {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.props.navigation.navigate('App');
-      }
-      if (!user) {
+      } else {
         this.setState({ login: true });
       }
     });
