@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { Container, Header, Content, Form, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import axios from 'axios';
@@ -14,7 +14,7 @@ export default class AddEvent extends Component {
     this.state = {
       customEventList: [],
       isDateTimePickerVisible: false,
-      dateMessage: 'Quand ?',
+      dateMessage: 'Définir une date',
       date_end: '',
       title: '',
       city: '',
@@ -88,48 +88,84 @@ export default class AddEvent extends Component {
 
   render() {
     return (
-      <Container>
-        <Header />
-        <Content>
-          <Form>
-            <Item>
-              <Input
-                placeholder="Nom de l'évènement"
-                onChangeText={title => this.setState({ title })} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Création d'un événement</Text>
+        <Form style={styles.form}>
+          <Item>
+            <Input
+              style={styles.input}
+              placeholder="Nom de l'évènement"
+              onChangeText={title => this.setState({ title })} />
+          </Item>
+          <Item>
+            <Input
+              style={styles.input}
+              placeholder="Ville"
+              onChangeText={city => this.setState({ city })} />
+          </Item>
+          <DateTimePicker
+            mode='datetime'
+            isVisible={this.state.isDateTimePickerVisible}
+            onConfirm={this._handleDatePicked}
+            onCancel={this._hideDateTimePicker} />
+          <Button
+          style={styles.button}
+            block primary
+            onPress={this._showDateTimePicker}>
+              <Text>
+                {this.state.dateMessage}
+              </Text>
+          </Button>
+          <Item>
+            <Input
+              style={styles.input}
+              placeholder="Prix"
+              keyboardType = 'numeric'
+              onChangeText={price => this.setState({ price })}/>
             </Item>
-            <Item>
-              <Input
-                placeholder="Ville"
-                onChangeText={city => this.setState({ city })} />
-            </Item>
-            <DateTimePicker
-              mode='datetime'
-              isVisible={this.state.isDateTimePickerVisible}
-              onConfirm={this._handleDatePicked}
-              onCancel={this._hideDateTimePicker} />
             <Button
-              block primary
-              onPress={this._showDateTimePicker}>
-                <Text>
-                  {this.state.dateMessage}
-                </Text>
-            </Button>
-            <Item>
-              <Input
-                placeholder="Prix"
-                keyboardType = 'numeric'
-                onChangeText={price => this.setState({ price })}/>
-              </Item>
-              <Button
-              block primary
-              onPress={() => this.geocoding()}>
-                <Text>
-                  Créez cet événement
-                </Text>
-            </Button>
-          </Form>
-        </Content>
-      </Container>
+            style={styles.mainButton}
+            block primary
+            onPress={() => this.geocoding()}>
+              <Text>
+                Créer cet événement
+              </Text>
+          </Button>
+        </Form>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#5f27cd',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 28,
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 50,
+  },
+  form: {
+    width: 300,
+    marginRight: 15
+  },
+  mainButton: {
+    marginTop: 30,
+    marginBottom : 50,
+    padding: 15,
+    backgroundColor: '#9980FA',
+    borderRadius: 10,
+  },
+  button: {
+    marginTop: 20,
+    marginBottom : 20,
+    padding: 5,
+    width: 250,
+    alignSelf: 'center'
+  },
+});
