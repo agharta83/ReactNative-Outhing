@@ -1,20 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-
 // import { Font } from 'expo';
 import * as firebase from 'firebase';
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: 'AIzaSyBn1_TVI38blzh0thZm7dl73DxnIhqMTRk',
-  authDomain: 'outhing-13fcf.firebaseapp.com',
-  databaseURL: 'https://outhing-13fcf.firebaseio.com',
-  projectId: 'outhing-13fcf',
-  storageBucket: 'outhing-13fcf.appspot.com',
-  messagingSenderId: '782761547865',
-};
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
 
 // TODO styling input text : react-native-textinput-effects
 

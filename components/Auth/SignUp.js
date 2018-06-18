@@ -5,6 +5,7 @@ import { Hoshi } from 'react-native-textinput-effects';
 // import { Font } from 'expo';
 import * as firebase from 'firebase';
 
+
 export default class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -17,38 +18,46 @@ export default class SignUp extends Component {
       password2: '',
       errorMessage: '',
     });
-}
+  }
 
   validateEmail(mail) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
-    {
-      return (true)
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return (true);
     }
-    return (false)
+    return (false);
   }
 
     signUp = (email, password) => {
       // this.setState({errorMessage: ''});
-      if (this.validateEmail(email) && password.length > 5 && this.state.password2 === password) {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-          .then(() => this.props.navigation.navigate('Login'))
-          .catch(error => this.setState({ errorMessage: error.message }));
-      }
-      if (!this.validateEmail(email)) {
-        this.setState({ errorMessage: 'Adresse email invalide' });
-      }
       if (password.length < 5) {
         this.setState({ errorMessage: 'Le mot de passe doit contenir au moins 5 caractères' });
-      }
-      if (this.state.password2 !== password) {
+      } else if (!this.validateEmail(email)) {
+        this.setState({ errorMessage: 'Adresse email invalide' });
+      } else if (this.state.password2 !== password) {
         this.setState({ errorMessage: 'Les mots de passe ne sont pas identiques' });
-      }
-      if (password.length < 5 && !this.validateEmail(email)) {
+      } else if (password.length < 5 && !this.validateEmail(email)) {
         this.setState({ errorMessage: 'Mot de passe et adresse email invalides' });
       }
+      // Create user authentification
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(() => this.props.navigation.navigate('Login'))
+        .catch(error => this.setState({ errorMessage: error.message }));
+
+      // Create user database
+      firebase.database().ref('users/uid').set({
+        username: this.state.username,
+        email: this.state.email,
+        city: this.state.city,
+      }).then(() => {
+        console.warn('USER INSERTED !');
+      })
+        .catch((error) => {
+          console.warn(error);
+        });
     };
 
-// TODO KeyboardAvoidingView does'nt work !
+  // TODO KeyboardAvoidingView does'nt work !
+  // TODO Form validation message animated
 
     render() {
       return (
@@ -124,6 +133,7 @@ export default class SignUp extends Component {
               returnKeyType="next"
               onSubmitEditing={() => this.passwordInput.focus()}
               ref={input => this.nextPassword = input}
+              secureTextEntry
               onChangeText={password => this.setState({ password })}
             />
 
@@ -139,7 +149,7 @@ export default class SignUp extends Component {
               }}
               // TextInput props
               returnKeyType="done"
-              ref={input => this.nextPassword = input}
+              ref={input => this.passwordInput = input}
               secureTextEntry
               onChangeText={password2 => this.setState({ password2 })}
             />
@@ -150,10 +160,8 @@ export default class SignUp extends Component {
             <TouchableBounce
               onPress={() =>
                 this.signUp(
-                this.state.email,
-                this.state.username,
-                this.state.city,
-                this.state.password,
+                  this.state.email,
+                  this.state.password,
               )}
             >
 
