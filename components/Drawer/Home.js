@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ImageBackground, Platform, Animated } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Platform, Animated, StatusBar } from 'react-native';
 import React, { Component } from 'react';
 import { FlatList, RectButton } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -10,10 +10,6 @@ import Moment from 'moment';
 import * as firebase from 'firebase';
 import AppHeader from '../appHeader';
 
-// TODO Review code request api with date = today
-// TODO Animate flatlist with transition
-// TODO Component Loading
-// TODO Function for add / delete event and change view with state
 const customEvent = firebase.database().ref('customEvent');
 
 const Row = ({ item }) => (
@@ -70,7 +66,7 @@ export default class Home extends Component {
       lonIds: [],
       latIds: [],
       allIds: [],
-      filteredIds : [],
+      filteredIds: [],
       loading: true,
       location: [],
       errorMessage: null,
@@ -190,7 +186,7 @@ export default class Home extends Component {
     return (
 
         <View style={styles.container}>
-
+          <StatusBar barStyle="light-content"/>
           <AppHeader navigation={this.props.navigation} />
 
            <FlatList
@@ -277,7 +273,7 @@ class StyleSwipeableRow extends Component {
 const styles = StyleSheet.create({
   leftAction: {
     flex: 1,
-    backgroundColor: '#f0f9fa',
+    backgroundColor: '#594192',
     justifyContent: 'center',
   },
   actionIcon: {
@@ -287,7 +283,7 @@ const styles = StyleSheet.create({
   },
   rightAction: {
     alignItems: 'flex-end',
-    backgroundColor: '#f0f9fa',
+    backgroundColor: '#594192',
     flex: 1,
     justifyContent: 'center',
   },
@@ -301,7 +297,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 1,
     justifyContent: 'center',
-    backgroundColor: '#5f27cd',
+    backgroundColor: '#594192',
   },
   content: {
     flex: 1,

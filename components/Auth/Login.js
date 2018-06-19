@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
-
-// import { Font } from 'expo';
+import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, StatusBar, Animated } from 'react-native';
+import { Hoshi } from 'react-native-textinput-effects';
 import * as firebase from 'firebase';
+
 // Initialize Firebase
 const firebaseConfig = {
   apiKey: 'AIzaSyBn1_TVI38blzh0thZm7dl73DxnIhqMTRk',
@@ -66,80 +66,161 @@ export default class Login extends Component {
             />
             <Text style={styles.title}>Bienvenue sur Outhing</Text>
             {this.state.errorMessage && <Text style={{color: 'red'}}>Mot de passe et/ou adresse non reconnus</Text>}
-            <TextInput
-              placeholder="Username or email"
-              returnKeyType="next"
-              onSubmitEditing={() => this.passwordInput.focus()}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              style={styles.input}
-              onChangeText={email => this.setState({ email })}
-              value={this.state.email}
-            />
-            <TextInput
-              placeholder="Password"
-              returnKeyType="done"
-              ref={(input) => this.passwordInput = input}
-              secureTextEntry
-              style={styles.input}
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-            />
-            <TouchableOpacity
-              style={styles.buttonContainer}
+
+            <View style={{ backgroundColor: '#594192', width: 300 }}>
+              <Hoshi
+              // Styling props
+                label={'Username or email'}
+                borderColor={'#5fbbe7'}
+                maskColor={'#594192'}
+                inputStyle= {{
+                  backgroundColor: '#594192',
+                  borderColor: '#594192',
+                  color: '#e4e7ec',
+                }}
+                // TextInput props
+                onSubmitEditing={() => this.passwordInput.focus()}
+                returnKeyType="next"
+                autoCapitalize="none"
+                onChangeText={email => this.setState({ email })}
+              />
+
+              <Hoshi
+              // Styling props
+                label={'Password'}
+                borderColor={'#5fbbe7'}
+                maskColor={'#594192'}
+                inputStyle= {{
+                  backgroundColor: '#594192',
+                  borderColor: '#594192',
+                  color: '#e4e7ec',
+                }}
+                // TextInput props
+                onSubmitEditing={() => this.passwordInput.focus()}
+                returnKeyType="done"
+                secureTextEntry
+                onChangeText={password => this.setState({ password })}
+              />
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableBounce
               onPress={() => this.signIn(this.state.email, this.state.password)}
             >
-              <Text
-                style={styles.buttonText}
-              >LOGIN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonContainer}
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>LOGIN</Text>
+              </View>
+            </TouchableBounce>
+
+            <TouchableBounce
               onPress={() => this.props.navigation.navigate('SignUp')}
             >
-              <Text
-                style={styles.buttonText}
-              >SIGN UP</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-        </View>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>SIGNUP</Text>
+              </View>
+
+            </TouchableBounce>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
       );
     }
+}
+
+// Styling Component for TouchableOpacity
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
+class TouchableBounce extends React.Component {
+  static defaultProps = {
+    activeOpacity: 0.7,
+  };
+  scale = new Animated.Value(1);
+
+  bounceTo = (
+    value: number,
+    velocity: number,
+    bounciness: number,
+    callback?: ?Function,
+  ) =>
+    Animated.spring(this.scale, {
+      toValue: value,
+      velocity,
+      bounciness,
+    }).start(callback);
+
+  onPressIn = (e) => {
+    this.bounceTo(0.93, 0.1, 0);
+    this.props.onPressIn && this.props.onPressIn(e);
+  };
+
+  onPressOut = (e) => {
+    this.bounceTo(1, 0.5, 0);
+    this.props.onPressOut && this.props.onPressOut(e);
+  };
+
+  onPress = (e) => {
+    this.bounceTo(1, 10, 10, this.props.onPressAnimationComplete);
+    this.props.onPress && this.props.onPress(e);
+  };
+
+  render() {
+    const { style, ...props } = this.props;
+    return (
+      <AnimatedTouchable
+        {...props}
+        style={[{ transform: [{ scale: this.scale }] }, style]}
+        onPressIn={this.onPressIn}
+        onPressOut={this.onPressOut}
+        onPress={this.onPress}
+      />
+    );
+  }
 }
 
 const styles = StyleSheet.create({
   loading: {
     flex: 1,
-    marginTop: '75%',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#5f27cd',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  container: {
+    flex: 1,
+    backgroundColor: '#594192',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
   title: {
     fontSize: 28,
-    color: 'white',
+    color: '#e4e7ec',
     fontWeight: 'bold',
-    marginBottom: 50,
-  },
-  input: {
-    height: 40,
-    backgroundColor: 'rgba(255,255,255,0.4)',
-    margin: 15,
-    color: '#fff',
-    paddingLeft: 10,
+    textAlign: 'center',
+    marginVertical: 50,
   },
   buttonContainer: {
-    marginTop: 50,
-    padding: 15,
-    backgroundColor: '#9980FA',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  button: {
     borderRadius: 10,
+    borderWidth: 1,
+    elevation: 3,
+    borderColor: '#aadaf0',
+    backgroundColor: '#9980FA',
+    width: 100,
+    height: 60,
+    marginHorizontal: 25,
   },
   buttonText: {
+    flex: 1,
     textAlign: 'center',
-    color: '#fff',
+    textAlignVertical: 'center',
+    color: '#e4e7ec',
     fontWeight: '700',
+  },
+  error: {
+    color: 'red',
+    textAlign: 'center',
   },
 });

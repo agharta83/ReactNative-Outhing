@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { Container, Header, Content, Form, Item, Input, Button } from 'native-base';
+import { Form, Item, Input, Button } from 'native-base';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import axios from 'axios';
 import * as firebase from 'firebase';
@@ -19,7 +19,7 @@ export default class AddEvent extends Component {
       title: '',
       city: '',
       latlon: [],
-      postalCode:'',
+      postalCode: '',
       price: '',
       firstPicker: false,
       eventAdmin: '',

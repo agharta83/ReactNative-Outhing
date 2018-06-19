@@ -1,13 +1,17 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 
+
 import SignUpScreen from './components/Auth/SignUp';
 import LoginScreen from './components/Auth/Login';
 
 import DrawerNav from './components/DrawerNav';
 import MaterialBottomTabs from './components/ProfilScreenBottomTabs';
 
-// TODO Change backgroundColor of StatusBas
+/**
+ * DEBUG WARNING YELLOW BOX
+ */
+
 
 const customTextInputProps = {
   underlineColorAndroid: 'rgba(0,0,0,0)',
@@ -31,14 +35,21 @@ setCustomTextInput(customTextInputProps);
 setCustomText(customTextProps);
 
 const AuthStack = createStackNavigator({
-  Login:
-      {
-        screen: LoginScreen,
-        navigationOptions: {
-          header: null,
-        },
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      headerTintColor: '#e4e7ec',
+      headerStyle: {
+        backgroundColor: '#594192',
       },
-  SignUp: { screen: SignUpScreen },
+    },
+  },
 });
 
 const AppStack = createStackNavigator(
